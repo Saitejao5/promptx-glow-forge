@@ -19,9 +19,7 @@ const ResultDisplay = ({
   onSaveTemplate 
 }: ResultDisplayProps) => {
   const { toast } = useToast();
-  const [isVisible, setIsVisible] = useState(false);
 
-  // Show the component when result is available or loading
   const shouldShow = isLoading || result;
 
   const handleCopy = async () => {
@@ -46,7 +44,6 @@ const ResultDisplay = ({
 
   return (
     <div className="max-w-4xl mx-auto mt-12 animate-fade-in">
-      {/* Section Header */}
       <div className="text-center mb-8">
         <div className="inline-flex items-center space-x-2 mb-4">
           <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
@@ -56,14 +53,11 @@ const ResultDisplay = ({
         <p className="text-slate-400">Your AI-enhanced prompt is ready</p>
       </div>
 
-      {/* Main Result Card */}
       <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl overflow-hidden animate-scale-in delay-300">
-        {/* Glow Effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-cyan-500/10 opacity-50"></div>
         
         <div className="relative p-8">
           {isLoading ? (
-            /* Loading State */
             <div className="space-y-6">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
@@ -72,7 +66,6 @@ const ResultDisplay = ({
                 <span className="text-purple-300 text-sm ml-2">Enhancing your prompt...</span>
               </div>
               
-              {/* Shimmer Loading Lines */}
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="relative overflow-hidden">
@@ -86,9 +79,7 @@ const ResultDisplay = ({
               </div>
             </div>
           ) : (
-            /* Result Content */
             <div className="space-y-6 animate-fade-in delay-500">
-              {/* Enhanced Prompt Output */}
               <div className="bg-white/5 border border-white/10 rounded-lg p-6 relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-cyan-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <div className="relative">
@@ -102,7 +93,6 @@ const ResultDisplay = ({
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
                 <Button
                   onClick={handleCopy}
@@ -119,7 +109,7 @@ const ResultDisplay = ({
                   className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300 group"
                 >
                   <Save className="w-4 h-4 mr-2 group-hover:text-cyan-300 transition-colors" />
-                  Save as Template
+                  💾 Save Prompt
                 </Button>
                 
                 <Button
@@ -136,7 +126,6 @@ const ResultDisplay = ({
         </div>
       </Card>
 
-      {/* Bottom Stats/Info */}
       {result && !isLoading && (
         <div className="text-center mt-6 animate-fade-in delay-700">
           <p className="text-slate-500 text-sm">

@@ -7,12 +7,31 @@ import { Badge } from "@/components/ui/badge";
 import { Wrench, Lightbulb, Bot, FileText, Sparkles, ArrowRight } from "lucide-react";
 import ResultDisplay from "@/components/ResultDisplay";
 import PromptTemplates from "@/components/PromptTemplates";
+import PromptHistoryPanel from "@/components/PromptHistoryPanel";
+import PromptAnalyzer from "@/components/PromptAnalyzer";
+import FloatingToolbar from "@/components/FloatingToolbar";
+import Navigation from "@/components/Navigation";
+import { usePromptHistory } from "@/hooks/usePromptHistory";
+import { useSavedPrompts } from "@/hooks/useSavedPrompts";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState("");
+  
+  // Tool states
+  const [activeTools, setActiveTools] = useState({
+    history: true,
+    saved: false,
+    blocks: false,
+    analyzer: true,
+  });
+
+  const { addToHistory } = usePromptHistory();
+  const { savePrompt } = useSavedPrompts();
+  const { toast } = useToast();
 
   const tools = [
     { icon: Wrench, label: "Specific Enhance", description: "Target specific improvements" },
@@ -41,6 +60,7 @@ Consider the following aspects:
 Please provide a comprehensive response that demonstrates deep expertise while being practical and actionable. Structure your response clearly and include relevant examples where appropriate.`;
       
       setResult(enhancedPrompt);
+      addToHistory(prompt, enhancedPrompt);
       setIsLoading(false);
     }, 2300);
   };
@@ -50,17 +70,40 @@ Please provide a comprehensive response that demonstrates deep expertise while b
   };
 
   const handleSaveTemplate = () => {
-    // Save template logic would go here
+    if (prompt && result) {
+      savePrompt(prompt, result);
+      toast({
+        title: "Prompt saved!",
+        description: "Your enhanced prompt has been saved to your collection.",
+      });
+    }
   };
 
   const handleSelectTemplate = (template: any) => {
     setPrompt(template.samplePrompt);
-    // Scroll to input section
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleReusePrompt = (reusedPrompt: string) => {
+    setPrompt(reusedPrompt);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleImproveMetric = (metric: string) => {
+    toast({
+      title: `Improving ${metric}`,
+      description: "AI enhancement suggestions coming soon!",
+    });
+  };
+
+  const toggleTool = (tool: keyof typeof activeTools) => {
+    setActiveTools(prev => ({ ...prev, [tool]: !prev[tool] }));
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/20 to-slate-950 relative overflow-hidden">
+      <Navigation />
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -69,10 +112,9 @@ Please provide a comprehensive response that demonstrates deep expertise while b
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 py-12 md:py-20">
+      <div className="relative z-10 container mx-auto px-4 py-12 md:py-20 pt-24">
         {/* Hero Section */}
         <div className="text-center mb-16 space-y-8">
-          {/* Animated Title */}
           <div className="relative">
             <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent animate-fade-in">
               PromptX
@@ -80,12 +122,10 @@ Please provide a comprehensive response that demonstrates deep expertise while b
             <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 blur-3xl animate-pulse"></div>
           </div>
 
-          {/* Subtitle */}
           <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed animate-fade-in delay-300">
             Amplify your prompts into professional-grade commands
           </p>
 
-          {/* Beta Badge */}
           <Badge variant="outline" className="bg-purple-500/10 border-purple-500/30 text-purple-300 px-4 py-2 animate-fade-in delay-500">
             <Sparkles className="w-4 h-4 mr-2" />
             AI-Powered Enhancement
@@ -94,7 +134,6 @@ Please provide a comprehensive response that demonstrates deep expertise while b
 
         {/* Main Input Section */}
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Glassmorphic Input Card */}
           <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl p-8 animate-scale-in delay-700">
             <div className="space-y-6">
               <div className="relative group">
@@ -107,7 +146,6 @@ Please provide a comprehensive response that demonstrates deep expertise while b
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-md opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
               </div>
 
-              {/* Tool Toolbar */}
               <div className="flex flex-wrap justify-center gap-4">
                 {tools.map((tool, index) => (
                   <button
@@ -123,7 +161,6 @@ Please provide a comprehensive response that demonstrates deep expertise while b
                 ))}
               </div>
 
-              {/* Enhance Button */}
               <div className="flex justify-center">
                 <Button
                   size="lg"
@@ -143,6 +180,11 @@ Please provide a comprehensive response that demonstrates deep expertise while b
             </div>
           </Card>
 
+          {/* Prompt History Panel */}
+          {activeTools.history && (
+            <PromptHistoryPanel onReusePrompt={handleReusePrompt} />
+          )}
+
           {/* Result Display Section */}
           <ResultDisplay
             isLoading={isLoading}
@@ -150,6 +192,14 @@ Please provide a comprehensive response that demonstrates deep expertise while b
             onTryAgain={handleTryAgain}
             onSaveTemplate={handleSaveTemplate}
           />
+
+          {/* Prompt Analyzer */}
+          {activeTools.analyzer && result && (
+            <PromptAnalyzer 
+              prompt={prompt}
+              onImprove={handleImproveMetric}
+            />
+          )}
 
           {/* Feature Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
@@ -181,6 +231,12 @@ Please provide a comprehensive response that demonstrates deep expertise while b
           Powered by advanced AI • Built for professionals
         </p>
       </div>
+
+      {/* Floating Toolbar */}
+      <FloatingToolbar 
+        activeTools={activeTools}
+        onToggleTool={toggleTool}
+      />
     </div>
   );
 };
