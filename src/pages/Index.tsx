@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Wrench, Lightbulb, Bot, FileText, Sparkles, ArrowRight } from "lucide-react";
 import ResultDisplay from "@/components/ResultDisplay";
+import PromptTemplates from "@/components/PromptTemplates";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
@@ -49,6 +51,12 @@ Please provide a comprehensive response that demonstrates deep expertise while b
 
   const handleSaveTemplate = () => {
     // Save template logic would go here
+  };
+
+  const handleSelectTemplate = (template: any) => {
+    setPrompt(template.samplePrompt);
+    // Scroll to input section
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -162,13 +170,16 @@ Please provide a comprehensive response that demonstrates deep expertise while b
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Footer Section */}
-        <div className="text-center mt-20 animate-fade-in delay-1000">
-          <p className="text-slate-500 text-sm">
-            Powered by advanced AI • Built for professionals
-          </p>
-        </div>
+      {/* Prompt Templates Section */}
+      <PromptTemplates onSelectTemplate={handleSelectTemplate} />
+
+      {/* Footer Section */}
+      <div className="relative z-10 text-center py-20 animate-fade-in delay-1000">
+        <p className="text-slate-500 text-sm">
+          Powered by advanced AI • Built for professionals
+        </p>
       </div>
     </div>
   );
