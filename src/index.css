@@ -73,6 +73,10 @@ All colors MUST be HSL.
     transform: scale(0.95);
   }
 
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
   .delay-300 {
     animation-delay: 300ms;
   }
@@ -113,6 +117,15 @@ All colors MUST be HSL.
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
 

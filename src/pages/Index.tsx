@@ -1,14 +1,16 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Wrench, Lightbulb, Bot, FileText, Sparkles, ArrowRight } from "lucide-react";
+import ResultDisplay from "@/components/ResultDisplay";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
   const [isHovered, setIsHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setResult] = useState("");
 
   const tools = [
     { icon: Wrench, label: "Specific Enhance", description: "Target specific improvements" },
@@ -16,6 +18,38 @@ const Index = () => {
     { icon: Bot, label: "Reverse Query", description: "Generate from outcomes" },
     { icon: FileText, label: "Prompt Templates", description: "Pre-built templates" },
   ];
+
+  const handleEnhance = async () => {
+    if (!prompt.trim()) return;
+    
+    setIsLoading(true);
+    setResult("");
+    
+    // Simulate AI processing
+    setTimeout(() => {
+      const enhancedPrompt = `You are an expert ${prompt.toLowerCase().includes('write') ? 'writer' : 'professional'} with extensive experience in your field. Your task is to ${prompt}
+
+Consider the following aspects:
+• Context and background information
+• Target audience and their needs  
+• Specific deliverables and outcomes
+• Quality standards and best practices
+• Timeline and resource constraints
+
+Please provide a comprehensive response that demonstrates deep expertise while being practical and actionable. Structure your response clearly and include relevant examples where appropriate.`;
+      
+      setResult(enhancedPrompt);
+      setIsLoading(false);
+    }, 2300);
+  };
+
+  const handleTryAgain = () => {
+    handleEnhance();
+  };
+
+  const handleSaveTemplate = () => {
+    // Save template logic would go here
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950/20 to-slate-950 relative overflow-hidden">
@@ -85,17 +119,29 @@ const Index = () => {
               <div className="flex justify-center">
                 <Button
                   size="lg"
-                  className="h-14 px-8 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group"
+                  onClick={handleEnhance}
+                  disabled={!prompt.trim() || isLoading}
+                  className="h-14 px-8 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                 >
-                  <span className="mr-3">Enhance Prompt</span>
+                  <span className="mr-3">
+                    {isLoading ? "Enhancing..." : "Enhance Prompt"}
+                  </span>
                   <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600/50 to-cyan-600/50 rounded-md blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                 </Button>
               </div>
             </div>
           </Card>
+
+          {/* Result Display Section */}
+          <ResultDisplay
+            isLoading={isLoading}
+            result={result}
+            onTryAgain={handleTryAgain}
+            onSaveTemplate={handleSaveTemplate}
+          />
 
           {/* Feature Cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
