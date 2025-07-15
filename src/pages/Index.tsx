@@ -2,24 +2,26 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Wrench, Lightbulb, Bot, FileText, Sparkles, ArrowRight } from "lucide-react";
-import ResultDisplay from "@/components/ResultDisplay";
+import { History, Sparkles } from "lucide-react";
+import Navigation from "@/components/Navigation";
+import PromptInput from "@/components/PromptInput";
+import InlineExamples from "@/components/InlineExamples";
+import EnhancedResultDisplay from "@/components/EnhancedResultDisplay";
+import PromptHistorySidebar from "@/components/PromptHistorySidebar";
 import PromptTemplates from "@/components/PromptTemplates";
-import PromptHistoryPanel from "@/components/PromptHistoryPanel";
 import PromptAnalyzer from "@/components/PromptAnalyzer";
 import FloatingToolbar from "@/components/FloatingToolbar";
-import Navigation from "@/components/Navigation";
 import { usePromptHistory } from "@/hooks/usePromptHistory";
 import { useSavedPrompts } from "@/hooks/useSavedPrompts";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
-  const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState("");
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [isHistorySidebarOpen, setIsHistorySidebarOpen] = useState(false);
   
   // Tool states
   const [activeTools, setActiveTools] = useState({
@@ -33,22 +35,79 @@ const Index = () => {
   const { savePrompt } = useSavedPrompts();
   const { toast } = useToast();
 
-  const tools = [
-    { icon: Wrench, label: "Specific Enhance", description: "Target specific improvements" },
-    { icon: Lightbulb, label: "Ultra Enhance", description: "Maximum enhancement power" },
-    { icon: Bot, label: "Reverse Query", description: "Generate from outcomes" },
-    { icon: FileText, label: "Prompt Templates", description: "Pre-built templates" },
-  ];
-
   const handleEnhance = async () => {
     if (!prompt.trim()) return;
     
     setIsLoading(true);
     setResult("");
     
-    // Simulate AI processing
+    // Simulate AI processing with tool-specific enhancements
     setTimeout(() => {
-      const enhancedPrompt = `You are an expert ${prompt.toLowerCase().includes('write') ? 'writer' : 'professional'} with extensive experience in your field. Your task is to ${prompt}
+      let enhancedPrompt = "";
+      
+      switch (selectedTool) {
+        case "ultra":
+          enhancedPrompt = `You are a world-class expert and thought leader with decades of experience in your field. Your task is to ${prompt}
+
+**Context & Strategic Approach:**
+• Analyze the broader ecosystem and market dynamics
+• Consider both immediate and long-term implications
+• Integrate best practices from leading organizations
+• Account for potential risks and mitigation strategies
+
+**Execution Framework:**
+• Target audience analysis and stakeholder mapping
+• Resource optimization and timeline considerations
+• Quality assurance and success metrics
+• Iterative improvement and feedback loops
+
+**Deliverables:**
+• Comprehensive, actionable recommendations
+• Clear implementation roadmap with milestones
+• Risk assessment and contingency planning
+• Success measurement criteria
+
+Please provide an expert-level response that demonstrates deep domain knowledge while being immediately practical and results-oriented. Include specific examples and cite relevant frameworks where appropriate.`;
+          break;
+          
+        case "specific":
+          enhancedPrompt = `You are a specialist consultant focused on delivering targeted, specific solutions. Your task is to ${prompt}
+
+**Specific Requirements:**
+• Define exact deliverables and outcomes
+• Identify key constraints and parameters
+• Specify tools, technologies, or methodologies
+• Establish clear success criteria
+
+**Targeted Approach:**
+• Focus on the most critical aspects
+• Provide step-by-step guidance
+• Include specific examples and templates
+• Address common pitfalls and solutions
+
+Please provide a focused, specific response that directly addresses the core requirements with actionable detail.`;
+          break;
+          
+        case "reverse":
+          enhancedPrompt = `Working backwards from the desired outcome, help me achieve: ${prompt}
+
+**Reverse Engineering Process:**
+• Start with the end goal clearly defined
+• Identify the final deliverable or outcome
+• Map the critical path backwards
+• Determine required inputs and prerequisites
+
+**Implementation Strategy:**
+• Break down into achievable milestones
+• Identify dependencies and bottlenecks
+• Create a timeline working backwards
+• Establish checkpoints and validation steps
+
+Please structure your response as a reverse-engineered plan that ensures we reach the desired outcome efficiently.`;
+          break;
+          
+        default:
+          enhancedPrompt = `You are an expert professional with extensive experience in your field. Your task is to ${prompt}
 
 Consider the following aspects:
 • Context and background information
@@ -58,6 +117,7 @@ Consider the following aspects:
 • Timeline and resource constraints
 
 Please provide a comprehensive response that demonstrates deep expertise while being practical and actionable. Structure your response clearly and include relevant examples where appropriate.`;
+      }
       
       setResult(enhancedPrompt);
       addToHistory(prompt, enhancedPrompt);
@@ -86,6 +146,13 @@ Please provide a comprehensive response that demonstrates deep expertise while b
 
   const handleReusePrompt = (reusedPrompt: string) => {
     setPrompt(reusedPrompt);
+    setIsHistorySidebarOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleEditPrompt = (editPrompt: string) => {
+    setPrompt(editPrompt);
+    setIsHistorySidebarOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -136,61 +203,40 @@ Please provide a comprehensive response that demonstrates deep expertise while b
         <div className="max-w-4xl mx-auto space-y-8">
           <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl p-8 animate-scale-in delay-700">
             <div className="space-y-6">
-              <div className="relative group">
-                <Input
-                  placeholder="Enter your prompt here..."
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="h-16 text-lg bg-white/5 border-white/20 text-white placeholder:text-slate-400 focus:border-purple-500/50 focus:ring-purple-500/20 transition-all duration-300"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-md opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-              </div>
-
-              <div className="flex flex-wrap justify-center gap-4">
-                {tools.map((tool, index) => (
-                  <button
-                    key={tool.label}
-                    className="group flex items-center space-x-2 px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500/30 rounded-full transition-all duration-300 hover:scale-105"
-                    style={{ animationDelay: `${800 + index * 100}ms` }}
-                  >
-                    <tool.icon className="w-5 h-5 text-purple-300 group-hover:text-purple-200 transition-colors" />
-                    <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
-                      {tool.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex justify-center">
-                <Button
-                  size="lg"
-                  onClick={handleEnhance}
-                  disabled={!prompt.trim() || isLoading}
-                  className="h-14 px-8 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-lg shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  <span className="mr-3">
-                    {isLoading ? "Enhancing..." : "Enhance Prompt"}
-                  </span>
-                  <ArrowRight className={`w-5 h-5 transition-transform duration-300 ${isHovered ? 'translate-x-1' : ''}`} />
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/50 to-cyan-600/50 rounded-md blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-                </Button>
-              </div>
+              <PromptInput
+                value={prompt}
+                onChange={setPrompt}
+                onSubmit={handleEnhance}
+                isLoading={isLoading}
+                selectedTool={selectedTool}
+                onToolSelect={setSelectedTool}
+              />
             </div>
           </Card>
 
-          {/* Prompt History Panel */}
-          {activeTools.history && (
-            <PromptHistoryPanel onReusePrompt={handleReusePrompt} />
-          )}
+          {/* Inline Examples */}
+          <InlineExamples onSelectExample={setPrompt} />
+
+          {/* History Sidebar Toggle */}
+          <div className="flex justify-end">
+            <Button
+              onClick={() => setIsHistorySidebarOpen(true)}
+              variant="outline"
+              className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/30"
+            >
+              <History className="w-4 h-4 mr-2" />
+              View History
+            </Button>
+          </div>
 
           {/* Result Display Section */}
-          <ResultDisplay
+          <EnhancedResultDisplay
             isLoading={isLoading}
             result={result}
+            originalPrompt={prompt}
             onTryAgain={handleTryAgain}
             onSaveTemplate={handleSaveTemplate}
+            onEditPrompt={handleEditPrompt}
           />
 
           {/* Prompt Analyzer */}
@@ -200,25 +246,6 @@ Please provide a comprehensive response that demonstrates deep expertise while b
               onImprove={handleImproveMetric}
             />
           )}
-
-          {/* Feature Cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
-            {tools.map((tool, index) => (
-              <Card
-                key={tool.label}
-                className="bg-white/5 backdrop-blur-xl border-white/10 p-6 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 hover:scale-105 group animate-fade-in"
-                style={{ animationDelay: `${1000 + index * 150}ms` }}
-              >
-                <div className="text-center space-y-4">
-                  <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <tool.icon className="w-6 h-6 text-purple-300" />
-                  </div>
-                  <h3 className="font-semibold text-white">{tool.label}</h3>
-                  <p className="text-sm text-slate-400">{tool.description}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -231,6 +258,14 @@ Please provide a comprehensive response that demonstrates deep expertise while b
           Powered by advanced AI • Built for professionals
         </p>
       </div>
+
+      {/* History Sidebar */}
+      <PromptHistorySidebar
+        isOpen={isHistorySidebarOpen}
+        onClose={() => setIsHistorySidebarOpen(false)}
+        onReusePrompt={handleReusePrompt}
+        onEditPrompt={handleEditPrompt}
+      />
 
       {/* Floating Toolbar */}
       <FloatingToolbar 
