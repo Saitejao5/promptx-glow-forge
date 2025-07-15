@@ -4,13 +4,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { History, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import PromptInput from "@/components/PromptInput";
 import InlineExamples from "@/components/InlineExamples";
 import EnhancedResultDisplay from "@/components/EnhancedResultDisplay";
 import PromptHistorySidebar from "@/components/PromptHistorySidebar";
 import PromptTemplates from "@/components/PromptTemplates";
-import PromptAnalyzer from "@/components/PromptAnalyzer";
+import AIThinkingPanel from "@/components/AIThinkingPanel";
 import FloatingToolbar from "@/components/FloatingToolbar";
 import { usePromptHistory } from "@/hooks/usePromptHistory";
 import { useSavedPrompts } from "@/hooks/useSavedPrompts";
@@ -141,19 +142,19 @@ Please provide a comprehensive response that demonstrates deep expertise while b
 
   const handleSelectTemplate = (template: any) => {
     setPrompt(template.samplePrompt);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   };
 
   const handleReusePrompt = (reusedPrompt: string) => {
     setPrompt(reusedPrompt);
     setIsHistorySidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   };
 
   const handleEditPrompt = (editPrompt: string) => {
     setPrompt(editPrompt);
     setIsHistorySidebarOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   };
 
   const handleImproveMetric = (metric: string) => {
@@ -173,90 +174,128 @@ Please provide a comprehensive response that demonstrates deep expertise while b
       
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-purple-600/5 to-transparent rounded-full"></div>
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3]
+          }}
+          transition={{ duration: 8, repeat: Infinity }}
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1.1, 1, 1.1],
+            opacity: [0.5, 0.3, 0.5]
+          }}
+          transition={{ duration: 8, repeat: Infinity, delay: 4 }}
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"
+        />
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 container mx-auto px-4 py-12 md:py-20 pt-24">
+      <div className="relative z-10 min-h-screen flex flex-col">
         {/* Hero Section */}
-        <div className="text-center mb-16 space-y-8">
-          <div className="relative">
-            <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent animate-fade-in">
+        <div className="text-center py-12 md:py-20 pt-24 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
               PromptX
             </h1>
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 blur-3xl animate-pulse"></div>
-          </div>
+          </motion.div>
 
-          <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed animate-fade-in delay-300">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mt-6"
+          >
             Amplify your prompts into professional-grade commands
-          </p>
+          </motion.p>
 
-          <Badge variant="outline" className="bg-purple-500/10 border-purple-500/30 text-purple-300 px-4 py-2 animate-fade-in delay-500">
-            <Sparkles className="w-4 h-4 mr-2" />
-            AI-Powered Enhancement
-          </Badge>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-8"
+          >
+            <Badge variant="outline" className="bg-purple-500/10 border-purple-500/30 text-purple-300 px-4 py-2">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI-Powered Enhancement
+            </Badge>
+          </motion.div>
         </div>
 
-        {/* Main Input Section */}
-        <div className="max-w-4xl mx-auto space-y-8">
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl p-8 animate-scale-in delay-700">
-            <div className="space-y-6">
-              <PromptInput
-                value={prompt}
-                onChange={setPrompt}
-                onSubmit={handleEnhance}
-                isLoading={isLoading}
-                selectedTool={selectedTool}
-                onToolSelect={setSelectedTool}
-              />
-            </div>
-          </Card>
-
-          {/* Inline Examples */}
-          <InlineExamples onSelectExample={setPrompt} />
-
-          {/* History Sidebar Toggle */}
-          <div className="flex justify-end">
-            <Button
-              onClick={() => setIsHistorySidebarOpen(true)}
-              variant="outline"
-              className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/30"
-            >
-              <History className="w-4 h-4 mr-2" />
-              View History
-            </Button>
-          </div>
-
-          {/* Result Display Section */}
-          <EnhancedResultDisplay
-            isLoading={isLoading}
-            result={result}
-            originalPrompt={prompt}
-            onTryAgain={handleTryAgain}
-            onSaveTemplate={handleSaveTemplate}
-            onEditPrompt={handleEditPrompt}
-          />
-
-          {/* Prompt Analyzer */}
-          {activeTools.analyzer && result && (
-            <PromptAnalyzer 
-              prompt={prompt}
-              onImprove={handleImproveMetric}
+        {/* Enhanced Output Section - Moved to Top */}
+        <div className="flex-1 container mx-auto px-4 pb-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Result Display Section */}
+            <EnhancedResultDisplay
+              isLoading={isLoading}
+              result={result}
+              originalPrompt={prompt}
+              onTryAgain={handleTryAgain}
+              onSaveTemplate={handleSaveTemplate}
+              onEditPrompt={handleEditPrompt}
             />
-          )}
+
+            {/* AI Thinking Panel */}
+            <AIThinkingPanel 
+              prompt={prompt}
+              isVisible={!!result && !isLoading}
+            />
+
+            {/* History Button */}
+            {result && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex justify-end mt-6"
+              >
+                <Button
+                  onClick={() => setIsHistorySidebarOpen(true)}
+                  variant="outline"
+                  className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/30"
+                >
+                  <History className="w-4 h-4 mr-2" />
+                  View History
+                </Button>
+              </motion.div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Prompt Templates Section */}
-      <PromptTemplates onSelectTemplate={handleSelectTemplate} />
+        {/* Prompt Templates Section */}
+        <PromptTemplates onSelectTemplate={handleSelectTemplate} />
 
-      {/* Footer Section */}
-      <div className="relative z-10 text-center py-20 animate-fade-in delay-1000">
-        <p className="text-slate-500 text-sm">
-          Powered by advanced AI • Built for professionals
-        </p>
+        {/* Input Section - Moved to Bottom with Sticky Positioning */}
+        <div className="sticky bottom-0 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent backdrop-blur-xl border-t border-white/10">
+          <div className="container mx-auto px-4 py-6">
+            <div className="max-w-4xl mx-auto">
+              <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl p-6 md:p-8">
+                <div className="space-y-6">
+                  <PromptInput
+                    value={prompt}
+                    onChange={setPrompt}
+                    onSubmit={handleEnhance}
+                    isLoading={isLoading}
+                    selectedTool={selectedTool}
+                    onToolSelect={setSelectedTool}
+                  />
+                  
+                  {/* Inline Examples - Only show when no result */}
+                  {!result && (
+                    <InlineExamples onSelectExample={setPrompt} />
+                  )}
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* History Sidebar */}
