@@ -2,10 +2,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Mic, ArrowRight } from "lucide-react";
+import { Mic, MicOff, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ToolSelector from "./ToolSelector";
 import { usePromptHistory } from "@/hooks/usePromptHistory";
+import { useVoiceRecognition } from "@/hooks/useVoiceRecognition";
 
 interface PromptInputProps {
   value: string;
@@ -28,6 +29,15 @@ const PromptInput = ({
   const [historyIndex, setHistoryIndex] = useState(-1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { history } = usePromptHistory();
+  
+  const {
+    isListening,
+    transcript,
+    error,
+    startListening,
+    stopListening,
+    resetTranscript,
+  } = useVoiceRecognition();
 
   // Auto-resize textarea
   useEffect(() => {
@@ -37,6 +47,14 @@ const PromptInput = ({
       textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
     }
   }, [value]);
+
+  // Update input with voice transcript
+  useEffect(() => {
+    if (transcript) {
+      onChange(value + transcript);
+      resetTranscript();
+    }
+  }, [transcript, value, onChange, resetTranscript]);
 
   // Handle arrow key navigation through history
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -63,6 +81,14 @@ const PromptInput = ({
     }
   };
 
+  const handleVoiceToggle = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
+
   return (
     <div className="relative group">
       <div className="relative">
@@ -86,10 +112,21 @@ const PromptInput = ({
         <Button
           size="sm"
           variant="ghost"
-          className="absolute right-12 top-3 h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-white/10"
+          onClick={handleVoiceToggle}
+          className={cn(
+            "absolute right-12 top-3 h-8 w-8 p-0 transition-all duration-300 hover:bg-white/10",
+            isListening 
+              ? "text-red-400 hover:text-red-300 animate-pulse" 
+              : "text-slate-400 hover:text-white"
+          )}
           disabled={isLoading}
+          title={isListening ? "Stop recording" : "Start voice input"}
         >
-          <Mic className="w-4 h-4" />
+          {isListening ? (
+            <MicOff className="w-4 h-4" />
+          ) : (
+            <Mic className="w-4 h-4" />
+          )}
         </Button>
 
         {/* Submit Button */}
@@ -118,6 +155,24 @@ const PromptInput = ({
           onToolSelect={onToolSelect}
         />
       </div>
+
+      {/* Voice status indicators */}
+      {isListening && (
+        <div className="absolute -top-8 right-12">
+          <div className="bg-red-500/80 text-white text-xs px-2 py-1 rounded animate-fade-in flex items-center gap-1">
+            <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+            Listening...
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="absolute -top-8 right-12">
+          <div className="bg-red-600/80 text-white text-xs px-2 py-1 rounded animate-fade-in">
+            {error}
+          </div>
+        </div>
+      )}
 
       {/* History indicator */}
       {historyIndex >= 0 && (
