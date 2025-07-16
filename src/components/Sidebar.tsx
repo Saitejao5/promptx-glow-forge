@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { X, Home, Template, Save, History, Info } from "lucide-react";
+import { X, Home, FileText, Save, History, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -13,7 +12,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onClose, onNavigate }: SidebarProps) => {
   const menuItems = [
     { id: "new-chat", icon: Home, label: "New Chat", emoji: "🏠" },
-    { id: "templates", icon: Template, label: "Templates", emoji: "🧩" },
+    { id: "templates", icon: FileText, label: "Templates", emoji: "🧩" },
     { id: "saved", icon: Save, label: "Saved", emoji: "💾" },
     { id: "history", icon: History, label: "History", emoji: "🕘" },
     { id: "about", icon: Info, label: "About Us", emoji: "🧠" },

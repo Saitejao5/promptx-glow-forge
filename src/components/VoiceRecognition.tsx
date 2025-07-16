@@ -12,6 +12,14 @@ interface VoiceRecognitionProps {
   onResult: (transcript: string) => void;
 }
 
+// Extend the Window interface to include speech recognition
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 const VoiceRecognition = ({ isListening, onStart, onStop, onResult }: VoiceRecognitionProps) => {
   const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef<any>(null);
@@ -19,7 +27,7 @@ const VoiceRecognition = ({ isListening, onStart, onStop, onResult }: VoiceRecog
 
   useEffect(() => {
     // Check if browser supports speech recognition
-    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     
     if (SpeechRecognition) {
       setIsSupported(true);
