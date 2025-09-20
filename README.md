@@ -43,6 +43,19 @@ Screenshot 2025-09-19 235355.png
 
 ---
 
-note:Due security reasons backend have not pushed into github 
+⚠️ Note: For security and intellectual property reasons, the backend code is not included in this repository.
+
+The backend powers features such as:
+
+🔹 Prompt enhancement & formatting (JSON, YAML, XML, Markdown)
+
+🔹 RAG (Retrieval-Augmented Generation) integration
+
+🔹 Smart preview & structured output enforcement
+
+If you’d like to learn more about the backend architecture or request access for collaboration, please contact the team directly:
+
+contact: tsai3116@gmail.com
+
 
 
