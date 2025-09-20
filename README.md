@@ -30,13 +30,19 @@ Unlike traditional chatboxes, PromptX gives users structured control over output
 🔗 **Enhanced Prompt Example**  
 👉 User: *“Create a website for students to learn Python”*  
 
-- Without PromptX → [View Result](https://preview--py-savvy-school.lovable.app/)  
-- With PromptX → [View Result](https://preview--python-spark.lovable.app/)  
+- Without PromptX enhacement → [View Result](https://preview--py-savvy-school.lovable.app/)  
+- With PromptX enhancement → [View Result](https://preview--python-spark.lovable.app/)  
 
 📸 Screenshots & GIFs:  
 
+this iss how it injects the generated responce into text fields od different cross plotforms
+before enhancing 
+Screenshot 2025-09-19 235442.png
+after enhacement 
+Screenshot 2025-09-19 235355.png
 
 ---
 
+note:Due security reasons backend have not pushed into github 
 
 
