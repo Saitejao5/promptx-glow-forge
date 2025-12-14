@@ -1,61 +1,144 @@
-# ⚡ PromptX – Intelligent Cross-Platform AI Prompt Companion
+# ⚡ PromptX — Intelligent Cross-Platform Multi-Agent AI Engine
 
-> The AI control layer that makes prompts **usable, structured, and cross-platform** 🚀  
-
-
+> The AI control layer that turns **simple intent** into **production-ready prompts**
 
 ---
 
-## 📖 Overview
+## ❓ Why PromptX Exists
 
-**PromptX** is an intelligent AI interaction layer that enhances, organizes, and contextualizes prompts for users.  
-Unlike traditional chatboxes, PromptX gives users structured control over outputs (JSON, YAML, XML, Markdown, etc.), works across platforms (via Chrome Extension + Floating FAB Pill UI), and ensures **accurate, developer-ready results**.
+AI isn’t failing.  
+**Prompts are.**
+
+Most AI tools today rely on raw, one-line prompts such as:
+
+> “Create a website for students to learn Python”
+
+The result is usually:
+- Broken or incomplete user flows
+- Random UI/UX decisions
+- No learning structure or product logic
+- Outputs that look acceptable but fail end-to-end
+
+This is not a limitation of AI models.  
+It’s a limitation of **how we communicate intent to AI**.
+
+Raw prompts are guesses.  
+Products require **structured thinking**.
 
 ---
 
-## ✨ Features
+## 🚀 What Is PromptX?
 
-- 🟢 **Floating Pill UI** → Expandable with **Enhance** + **Mic** buttons.  
-- 🎙️ **Voice + Text Input** → Flexible prompt entry.  
-- ⚡ **WisprFlow-Style Streaming** → Live token-by-token responses.  
-- 🧠 **RAG Integration** → Context-rich, accurate outputs.  
-- 📊 **Structured Outputs** → JSON, YAML, XML, Markdown, Plain text.  
-- 🌍 **Cross-Platform Chrome Extension** → Works in browsers, IDEs, docs, forms.  
-- 🛡️ **Smart Preview Card** → Validate before insertion.  
+**PromptX** is a **cross-platform, multi-modal, multi-agent AI engine** that enhances user prompts by planning, structuring, and validating them before execution.
+
+Instead of forwarding prompts directly to an LLM, PromptX acts as an **AI orchestration layer**.
+
+---
+
+## 🧠 How It Works (Multi-Agent Orchestration)
+
+When a user enters a prompt (via voice or text), PromptX activates **multiple specialized AI agents in parallel**, including:
+
+- **Intent Understanding Agent**  
+  Identifies user goals, context, and constraints
+
+- **Product Planning Agent**  
+  Defines features, scope, and system requirements
+
+- **UI/UX Structuring Agent**  
+  Designs layouts, flows, and interaction patterns
+
+- **Backend & Data Flow Agent**  
+  Plans architecture, APIs, and data models
+
+- **Micro-Content & Interaction Agent**  
+  Handles copy, tone, and micro-interactions
+
+- **Output Validation Agent**  
+  Enforces clean, structured outputs (JSON, Markdown, code-ready formats)
+
+These agents collaborate, refine, and validate the intent **before** generating the final prompt or output.
+
+---
+
+## ✨ Key Features
+
+- 🟢 **Floating FAB Pill UI**  
+  Expandable interface with Enhance + Mic controls
+
+- 🎙️ **Multi-Modal Input**  
+  Voice and text supported
+
+- ⚡ **Live Streaming Responses**  
+  Token-by-token output (WisprFlow-style)
+
+- 🧠 **RAG Integration**  
+  Context-aware, accurate generation
+
+- 📊 **Structured Outputs**  
+  JSON, YAML, XML, Markdown, and Plain Text
+
+- 🌍 **Cross-Platform Chrome Extension**  
+  Works inside browsers, IDEs, documents, and forms
+
+- 🛡️ **Smart Preview Card**  
+  Review and validate output before injection
+
+---
+
+## 🔍 Why PromptX Is Different
+
+- Same AI models  
+- Same user intent  
+- **Completely different outcomes**
+
+PromptX does not replace AI tools.  
+It **unlocks their full potential** by introducing a missing intelligence layer.
+
+This is not “better prompting.”  
+This is **prompt engineering as a product system**.
 
 ---
 
 ## 🖥️ Demo
 
-🔗 **Enhanced Prompt Example**  
-👉 User: *“Create a website for students to learn Python”*  
+### User Prompt
+> “Create a website for students to learn Python”
 
-- Without PromptX enhacement → [View Result](https://preview--py-savvy-school.lovable.app/)  
-- With PromptX enhancement → [View Result](https://preview--python-spark.lovable.app/)  
+- ❌ Without PromptX enhancement  
+  https://preview--py-savvy-school.lovable.app/
 
-📸 Screenshots & GIFs:  
-
-this iss how it injects the generated responce into text fields od different cross plotforms
-before enhancing 
-Screenshot 2025-09-19 235442.png
-after enhacement 
-Screenshot 2025-09-19 235355.png
+- ✅ With PromptX enhancement  
+  https://preview--python-spark.lovable.app/
 
 ---
 
-⚠️ Note: For security and intellectual property reasons, the backend code is not included in this repository.
+## 🔐 Backend & Security
 
-The backend powers features such as:
+For security and intellectual property reasons, backend implementation is not included in this repository.
 
-🔹 Prompt enhancement & formatting (JSON, YAML, XML, Markdown)
+The backend powers:
+- Prompt enhancement & format enforcement
+- Multi-agent reasoning workflows
+- RAG pipelines
+- Smart preview and validation logic
 
-🔹 RAG (Retrieval-Augmented Generation) integration
+---
 
-🔹 Smart preview & structured output enforcement
+## 🤝 Collaboration & Access
 
-If you’d like to learn more about the backend architecture or request access for collaboration, please contact the team directly:
+If you are interested in:
+- Backend architecture discussion
+- Research collaboration
+- Enterprise or product integration
 
-contact: tsai3116@gmail.com
+📩 Contact: **tsai3116@gmail.com**
 
+---
 
+## 🌟 Vision
 
+The future of AI is not just better models.  
+It is **better orchestration**.
+
+**PromptX is the control layer for serious AI builders.**
